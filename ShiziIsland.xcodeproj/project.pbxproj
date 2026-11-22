@@ -1,0 +1,375 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A6070B9CF28E71610AA267AE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A790BB479B2477E3A634A1EB /* Assets.xcassets */; };
+		6CC958A0BEA4AD614AE5FE7D /* characters.json in Resources */ = {isa = PBXBuildFile; fileRef = 901EE3022A0C446780F46A2C /* characters.json */; };
+		E7063E66B915C75277861334 /* ShiziIslandApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74694B83BD8B2BF8713AE445 /* ShiziIslandApp.swift */; };
+		C6116BCA2AAF6B51D4EDFC88 /* SpeechService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D16EA5F0CDAC9D5F73C80D7C /* SpeechService.swift */; };
+		20136190AD9157A618EC4C08 /* CurriculumBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53076B1180EDF2C4B36E1037 /* CurriculumBuilder.swift */; };
+		24196286C9DB0D0159BE622A /* HanziEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E5D70C376C0493C76EC283D /* HanziEntry.swift */; };
+		C29FE4918DD3D93044F59513 /* ProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1321991C1FC16445E077634A /* ProgressStore.swift */; };
+		1296B71C36F360805C1B7DE7 /* QuestionFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75776BACB6CFA70936B6611A /* QuestionFactory.swift */; };
+		F561F4AC40E7AB1B191ABC79 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4A35EEBB48575413F754CDF /* HomeView.swift */; };
+		CCAB896957022F75CDC5110B /* IslandPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9891F762643D21AFB33B65FC /* IslandPathView.swift */; };
+		1A83B8C04525397AF6EDE754 /* LessonPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A57BD056B32D651215953235 /* LessonPathView.swift */; };
+		7594C919FBB430B40BA5D6EF /* LessonPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 905AC3F0A4FFDE3F5500F3C4 /* LessonPlayerView.swift */; };
+		510472AFAC14F0D173B87D09 /* QuestionViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7080DC544708E5E56BB17EC0 /* QuestionViews.swift */; };
+		92D072ACB43DDBC8036DFB15 /* ReviewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF9BC55B41613F7AE0AE61F /* ReviewSessionView.swift */; };
+		162D836C7C50E6AD190F4643 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C9EF36D5E561B4500076AF /* RootView.swift */; };
+		B20563F92186107432B091DE /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFADAB6D5BE52C392372D721 /* Theme.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A790BB479B2477E3A634A1EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B15A13ACECE86FF5B996CE6C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		901EE3022A0C446780F46A2C /* characters.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = characters.json; sourceTree = "<group>"; };
+		0E8DE8F7D2B03CB5E6A3C97C /* ShiziIsland.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShiziIsland.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		74694B83BD8B2BF8713AE445 /* ShiziIslandApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShiziIslandApp.swift; sourceTree = "<group>"; };
+		D16EA5F0CDAC9D5F73C80D7C /* SpeechService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechService.swift; sourceTree = "<group>"; };
+		53076B1180EDF2C4B36E1037 /* CurriculumBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurriculumBuilder.swift; sourceTree = "<group>"; };
+		7E5D70C376C0493C76EC283D /* HanziEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HanziEntry.swift; sourceTree = "<group>"; };
+		1321991C1FC16445E077634A /* ProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressStore.swift; sourceTree = "<group>"; };
+		75776BACB6CFA70936B6611A /* QuestionFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionFactory.swift; sourceTree = "<group>"; };
+		F4A35EEBB48575413F754CDF /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		9891F762643D21AFB33B65FC /* IslandPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IslandPathView.swift; sourceTree = "<group>"; };
+		A57BD056B32D651215953235 /* LessonPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonPathView.swift; sourceTree = "<group>"; };
+		905AC3F0A4FFDE3F5500F3C4 /* LessonPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LessonPlayerView.swift; sourceTree = "<group>"; };
+		7080DC544708E5E56BB17EC0 /* QuestionViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuestionViews.swift; sourceTree = "<group>"; };
+		AEF9BC55B41613F7AE0AE61F /* ReviewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSessionView.swift; sourceTree = "<group>"; };
+		31C9EF36D5E561B4500076AF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		DFADAB6D5BE52C392372D721 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		424153ED3CD079DB4DB459AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		518DA81DB9B99529C0C0AEBE = {
+			isa = PBXGroup;
+			children = (
+				A7C356A222B0537EA33D85E7 /* ShiziIsland */,
+				547D009064F7C3F13BEF3460 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		547D009064F7C3F13BEF3460 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E8DE8F7D2B03CB5E6A3C97C /* ShiziIsland.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7C356A222B0537EA33D85E7 /* ShiziIsland */ = {
+			isa = PBXGroup;
+			children = (
+				D1D0524B025E57AFFF263442 /* App */,
+				E45F76C2D80FAD483876517A /* Audio */,
+				2CE9B3FBAC170B0172DAFE6F /* Curriculum */,
+				A1C86A29E589D48EC70B6A32 /* Models */,
+				60007F2925DEA5C892005D77 /* Persistence */,
+				D2337430360082306C1FAFCD /* Practice */,
+				38DF21AEF4612506D6BE5CBE /* Views */,
+				887A6F90336FF23D95C3914B /* Resources */,
+				A790BB479B2477E3A634A1EB /* Assets.xcassets */,
+				B15A13ACECE86FF5B996CE6C /* Info.plist */,
+			);
+			path = ShiziIsland;
+			sourceTree = "<group>";
+		};
+		D1D0524B025E57AFFF263442 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				74694B83BD8B2BF8713AE445 /* ShiziIslandApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		E45F76C2D80FAD483876517A /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				D16EA5F0CDAC9D5F73C80D7C /* SpeechService.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		2CE9B3FBAC170B0172DAFE6F /* Curriculum */ = {
+			isa = PBXGroup;
+			children = (
+				53076B1180EDF2C4B36E1037 /* CurriculumBuilder.swift */,
+			);
+			path = Curriculum;
+			sourceTree = "<group>";
+		};
+		A1C86A29E589D48EC70B6A32 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				7E5D70C376C0493C76EC283D /* HanziEntry.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		60007F2925DEA5C892005D77 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				1321991C1FC16445E077634A /* ProgressStore.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		D2337430360082306C1FAFCD /* Practice */ = {
+			isa = PBXGroup;
+			children = (
+				75776BACB6CFA70936B6611A /* QuestionFactory.swift */,
+			);
+			path = Practice;
+			sourceTree = "<group>";
+		};
+		38DF21AEF4612506D6BE5CBE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F4A35EEBB48575413F754CDF /* HomeView.swift */,
+				9891F762643D21AFB33B65FC /* IslandPathView.swift */,
+				A57BD056B32D651215953235 /* LessonPathView.swift */,
+				905AC3F0A4FFDE3F5500F3C4 /* LessonPlayerView.swift */,
+				7080DC544708E5E56BB17EC0 /* QuestionViews.swift */,
+				AEF9BC55B41613F7AE0AE61F /* ReviewSessionView.swift */,
+				31C9EF36D5E561B4500076AF /* RootView.swift */,
+				DFADAB6D5BE52C392372D721 /* Theme.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		887A6F90336FF23D95C3914B /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				901EE3022A0C446780F46A2C /* characters.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9E29260CD95A582F05E78D3D /* ShiziIsland */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 354589B28580510B6EC24620 /* Build configuration list for PBXNativeTarget "ShiziIsland" */;
+			buildPhases = (
+				7A70D71C385290AF96BF1031 /* Sources */,
+				424153ED3CD079DB4DB459AF /* Frameworks */,
+				285BB1C1430063331E9F5DD0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShiziIsland;
+			productName = ShiziIsland;
+			productReference = 0E8DE8F7D2B03CB5E6A3C97C /* ShiziIsland.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					9E29260CD95A582F05E78D3D = {
+						CreatedOnToolsVersion = 15.0;
+					};
+				};
+			};
+			buildConfigurationList = 1F4E3D13C2320EDA50221924 /* Build configuration list for PBXProject "ShiziIsland" */;
+			compatibilityVersion = "Xcode 15.0";
+			developmentRegion = "zh-Hans";
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				"zh-Hans",
+				Base,
+			);
+			mainGroup = 518DA81DB9B99529C0C0AEBE;
+			productRefGroup = 547D009064F7C3F13BEF3460 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9E29260CD95A582F05E78D3D /* ShiziIsland */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		285BB1C1430063331E9F5DD0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6070B9CF28E71610AA267AE /* Assets.xcassets in Resources */,
+				6CC958A0BEA4AD614AE5FE7D /* characters.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7A70D71C385290AF96BF1031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E7063E66B915C75277861334 /* ShiziIslandApp.swift in Sources */,
+				C6116BCA2AAF6B51D4EDFC88 /* SpeechService.swift in Sources */,
+				20136190AD9157A618EC4C08 /* CurriculumBuilder.swift in Sources */,
+				24196286C9DB0D0159BE622A /* HanziEntry.swift in Sources */,
+				C29FE4918DD3D93044F59513 /* ProgressStore.swift in Sources */,
+				1296B71C36F360805C1B7DE7 /* QuestionFactory.swift in Sources */,
+				F561F4AC40E7AB1B191ABC79 /* HomeView.swift in Sources */,
+				CCAB896957022F75CDC5110B /* IslandPathView.swift in Sources */,
+				1A83B8C04525397AF6EDE754 /* LessonPathView.swift in Sources */,
+				7594C919FBB430B40BA5D6EF /* LessonPlayerView.swift in Sources */,
+				510472AFAC14F0D173B87D09 /* QuestionViews.swift in Sources */,
+				92D072ACB43DDBC8036DFB15 /* ReviewSessionView.swift in Sources */,
+				162D836C7C50E6AD190F4643 /* RootView.swift in Sources */,
+				B20563F92186107432B091DE /* Theme.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		35D0387E8A36F09B2F1874B0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		19B69E46700831D730A5F9AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ADCEC035C6F98F8FBC76DFAE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+							ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+							ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+							CODE_SIGN_STYLE = Automatic;
+							CURRENT_PROJECT_VERSION = 1;
+							ENABLE_PREVIEWS = YES;
+							GENERATE_INFOPLIST_FILE = NO;
+							INFOPLIST_FILE = ShiziIsland/Info.plist;
+							IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+							LD_RUNPATH_SEARCH_PATHS = (
+								"$(inherited)",
+								"@executable_path/Frameworks",
+							);
+							MARKETING_VERSION = 1.0;
+							PRODUCT_BUNDLE_IDENTIFIER = local.draft.shizixiaodao;
+							PRODUCT_NAME = "$(TARGET_NAME)";
+							SDKROOT = iphoneos;
+							SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+							SWIFT_EMIT_LOC_STRINGS = YES;
+							SWIFT_VERSION = 5.0;
+							TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		2C83AA7168667E76071B68EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+							ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+							ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+							CODE_SIGN_STYLE = Automatic;
+							CURRENT_PROJECT_VERSION = 1;
+							ENABLE_PREVIEWS = YES;
+							GENERATE_INFOPLIST_FILE = NO;
+							INFOPLIST_FILE = ShiziIsland/Info.plist;
+							IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+							LD_RUNPATH_SEARCH_PATHS = (
+								"$(inherited)",
+								"@executable_path/Frameworks",
+							);
+							MARKETING_VERSION = 1.0;
+							PRODUCT_BUNDLE_IDENTIFIER = local.draft.shizixiaodao;
+							PRODUCT_NAME = "$(TARGET_NAME)";
+							SDKROOT = iphoneos;
+							SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+							SWIFT_EMIT_LOC_STRINGS = YES;
+							SWIFT_VERSION = 5.0;
+							TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1F4E3D13C2320EDA50221924 /* Build configuration list for PBXProject "ShiziIsland" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				35D0387E8A36F09B2F1874B0 /* Debug */,
+				19B69E46700831D730A5F9AF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		354589B28580510B6EC24620 /* Build configuration list for PBXNativeTarget "ShiziIsland" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADCEC035C6F98F8FBC76DFAE /* Debug */,
+				2C83AA7168667E76071B68EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+}
