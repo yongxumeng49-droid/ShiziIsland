@@ -13,6 +13,40 @@ struct SavedProgress: Codable, Equatable {
     var reviews: [String: ReviewRecord] = [:]
     var streak: Int = 0
     var lastPracticeDay: String? = nil
+    /// 某一天第一次算进每日计划的新字 id。旧进度文件没有这个字段，仍然能读。
+    var newCharacterDays: [String: [Int]] = [:]
+
+    init() {}
+
+    enum CodingKeys: String, CodingKey {
+        case bestStars, completed, reviews, streak, lastPracticeDay, newCharacterDays
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        bestStars = try container.decodeIfPresent([String: Int].self, forKey: .bestStars) ?? [:]
+        completed = try container.decodeIfPresent([String: Bool].self, forKey: .completed) ?? [:]
+        reviews = try container.decodeIfPresent([String: ReviewRecord].self, forKey: .reviews) ?? [:]
+        streak = try container.decodeIfPresent(Int.self, forKey: .streak) ?? 0
+        lastPracticeDay = try container.decodeIfPresent(String.self, forKey: .lastPracticeDay)
+        newCharacterDays = try container.decodeIfPresent([String: [Int]].self, forKey: .newCharacterDays) ?? [:]
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(bestStars, forKey: .bestStars)
+        try container.encode(completed, forKey: .completed)
+        try container.encode(reviews, forKey: .reviews)
+        try container.encode(streak, forKey: .streak)
+        try container.encodeIfPresent(lastPracticeDay, forKey: .lastPracticeDay)
+        try container.encode(newCharacterDays, forKey: .newCharacterDays)
+    }
+}
+
+enum LessonAccess: Equatable {
+    case ready
+    case needsPrevious
+    case restToday
 }
 
 @MainActor
@@ -163,6 +197,53 @@ final class ProgressStore: ObservableObject {
         !island.lessons.isEmpty && island.lessons.allSatisfy { isCompleted($0.id) }
     }
 
+    func newCharactersToday(now: Date = .now) -> Int {
+        saved.newCharacterDays[Self.dayKey(now)]?.count ?? 0
+    }
+
+    func remainingNewCharactersToday(limit: Int, now: Date = .now) -> Int {
+        max(0, AppSettings.normalizedLimit(limit) - newCharactersToday(now: now))
+    }
+
+    /// 这一课里还没算进任何一天、也还没在已完成的课里出现过的字。
+    func freshCharacters(in lesson: LessonCurriculum, corpus: CorpusStore) -> [HanziEntry] {
+        let known = knownCharacterIDs(in: corpus)
+        return lesson.characters.filter { !known.contains($0.id) }
+    }
+
+    func access(to lesson: LessonCurriculum, in corpus: CorpusStore, dailyLimit: Int, now: Date = .now) -> LessonAccess {
+        guard isLessonUnlocked(lesson, in: corpus) else { return .needsPrevious }
+        if lesson.isCheckpoint || isCompleted(lesson.id) { return .ready }
+        let todayIDs = saved.newCharacterDays[Self.dayKey(now)] ?? []
+        let todaySet = Set(todayIDs)
+        if lesson.characters.contains(where: { todaySet.contains($0.id) }) {
+            return .ready
+        }
+        let fresh = freshCharacters(in: lesson, corpus: corpus)
+        if fresh.isEmpty { return .ready }
+        let limit = AppSettings.normalizedLimit(dailyLimit)
+        if todayIDs.count + fresh.count <= limit { return .ready }
+        return .restToday
+    }
+
+    /// 打开一课新字时记账。已经记过或已经学完的字不会再占今天的名额。
+    func recordNewCharactersIfNeeded(_ lesson: LessonCurriculum, in corpus: CorpusStore, now: Date = .now) {
+        guard !lesson.isCheckpoint, !isCompleted(lesson.id) else { return }
+        let today = Self.dayKey(now)
+        var todayIDs = saved.newCharacterDays[today] ?? []
+        let known = knownCharacterIDs(in: corpus)
+        var changed = false
+        for entry in lesson.characters where !known.contains(entry.id) && !todayIDs.contains(entry.id) {
+            todayIDs.append(entry.id)
+            changed = true
+        }
+        guard changed else { return }
+        var next = saved
+        next.newCharacterDays[today] = todayIDs
+        saved = next
+        persist()
+    }
+
     func isLessonUnlocked(_ lesson: LessonCurriculum, in corpus: CorpusStore) -> Bool {
         guard let island = corpus.island(stage: lesson.stage, index: lesson.islandIndex) else { return false }
         guard isIslandUnlocked(island, in: corpus) else { return false }
@@ -179,6 +260,20 @@ final class ProgressStore: ObservableObject {
 
     func completedIslandCount(_ stage: StageCurriculum) -> Int {
         stage.islands.filter { isIslandCompleted($0) }.count
+    }
+
+    private func knownCharacterIDs(in corpus: CorpusStore) -> Set<Int> {
+        var ids = Set(saved.newCharacterDays.values.flatMap { $0 })
+        for stage in corpus.stages {
+            for island in stage.islands {
+                for lesson in island.lessons where !lesson.isCheckpoint && isCompleted(lesson.id) {
+                    for entry in lesson.characters {
+                        ids.insert(entry.id)
+                    }
+                }
+            }
+        }
+        return ids
     }
 
     private func recordPractice(_ now: Date) {

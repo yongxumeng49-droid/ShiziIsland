@@ -17,6 +17,7 @@ private enum ReviewStep: Identifiable {
 struct ReviewSessionView: View {
     @EnvironmentObject private var corpus: CorpusStore
     @EnvironmentObject private var progress: ProgressStore
+    @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) private var dismiss
     @StateObject private var speech = SpeechService()
 
@@ -38,7 +39,13 @@ struct ReviewSessionView: View {
         }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .onAppear(perform: prepare)
+        .onAppear {
+            speech.voice = settings.voice
+            prepare()
+        }
+        .onChange(of: settings.voice) { _, newVoice in
+            speech.voice = newVoice
+        }
         .onDisappear { speech.stop() }
     }
 
@@ -83,7 +90,10 @@ struct ReviewSessionView: View {
                     total: questionTotal,
                     speech: speech,
                     onAnswer: { correct in
-                        if correct { correctCount += 1 }
+                        if correct {
+                            correctCount += 1
+                            speech.speakPraise()
+                        }
                         for entry in question.gradedEntries {
                             progress.grade(id: entry.id, correct: correct)
                         }
@@ -102,14 +112,13 @@ struct ReviewSessionView: View {
             Text("再认一个字")
                 .font(Theme.ui(18, .semibold))
                 .foregroundStyle(Theme.inkSoft)
-            Text(entry.char)
-                .font(Theme.glyph(140))
-                .foregroundStyle(Theme.ink)
-                .minimumScaleFactor(0.4)
-                .lineLimit(1)
-            Text(entry.pinyin)
-                .font(Theme.ui(36, .bold))
-                .foregroundStyle(Theme.seaDeep)
+            TextbookCharacter(
+                entry: entry,
+                glyphSize: 132,
+                pinyinSize: 60,
+                artWidth: 180,
+                artHeight: 128
+            )
             MemoryDots(box: progress.memoryBox(for: entry.id))
             if !entry.words.isEmpty {
                 HStack(spacing: 10) {
@@ -132,12 +141,12 @@ struct ReviewSessionView: View {
                     .minimumScaleFactor(0.7)
             }
             HStack(spacing: 10) {
-                listenButton("听字") { speech.speak(entry.char) }
+                listenButton("听字") { speech.replayCharacter(entry) }
                 if !entry.words.isEmpty {
-                    listenButton("听词语") { speech.speak(entry.words.joined(separator: "，")) }
+                    listenButton("听词语") { speech.replayWords(entry) }
                 }
                 if !entry.sentence.isEmpty {
-                    listenButton("听句子") { speech.speak(entry.sentence) }
+                    listenButton("听句子") { speech.replaySentence(entry) }
                 }
             }
             PrimaryButton(title: "认一认") { advance() }
@@ -146,7 +155,10 @@ struct ReviewSessionView: View {
         .frame(maxWidth: 720)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Theme.card.opacity(0.94), in: RoundedRectangle(cornerRadius: 28, style: .continuous))
-        .onAppear { speech.speak(entry.char) }
+        .task(id: entry.id) {
+            let token = speech.playPresentation(entry, repeats: 3, includePhrases: true)
+            await PlaybackLifetime.untilCancelled(stop: token, speech: speech)
+        }
     }
 
     private func listenButton(_ title: String, action: @escaping () -> Void) -> some View {

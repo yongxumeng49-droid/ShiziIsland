@@ -5,6 +5,7 @@ struct LessonPlayerView: View {
     @Binding var path: [AppRoute]
     @EnvironmentObject private var corpus: CorpusStore
     @EnvironmentObject private var progress: ProgressStore
+    @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) private var dismiss
     @StateObject private var speech = SpeechService()
 
@@ -24,6 +25,7 @@ struct LessonPlayerView: View {
         case cover
         case practice
         case done
+        case resting
         case unavailable
     }
 
@@ -41,7 +43,13 @@ struct LessonPlayerView: View {
         }
         }
         .toolbar(.hidden, for: .navigationBar)
-        .onAppear(perform: prepare)
+        .onAppear {
+            speech.voice = settings.voice
+            prepare()
+        }
+        .onChange(of: settings.voice) { _, newVoice in
+            speech.voice = newVoice
+        }
         .onDisappear { speech.stop() }
         .alert("先离开吗", isPresented: $showLeave) {
             Button("留下", role: .cancel) {}
@@ -100,6 +108,8 @@ struct LessonPlayerView: View {
                 }
             case .done:
                 done(lesson)
+            case .resting:
+                resting(lesson)
             case .unavailable:
                 unavailable
             }
@@ -112,75 +122,62 @@ struct LessonPlayerView: View {
         let entry = lesson.characters[safe: introIndex]
         return ScrollView {
             VStack(spacing: 18) {
-            Text("认识新字")
-                .font(Theme.ui(20, .semibold))
-                .foregroundStyle(Theme.inkSoft)
-            if let entry {
-                Text(entry.char)
-                    .font(Theme.glyph(200))
-                    .foregroundStyle(Theme.ink)
-                    .minimumScaleFactor(0.4)
-                    .lineLimit(1)
-                Text(entry.pinyin)
-                    .font(Theme.ui(44, .bold))
-                    .foregroundStyle(Theme.seaDeep)
-                Text("\(entry.strokes) 画")
-                    .font(Theme.ui(18, .medium))
+                Text("认识新字")
+                    .font(Theme.ui(20, .semibold))
                     .foregroundStyle(Theme.inkSoft)
-                if !entry.words.isEmpty {
-                    HStack(spacing: 10) {
-                        ForEach(entry.words, id: \.self) { word in
-                            Text(word)
-                                .font(Theme.ui(22, .bold))
-                                .foregroundStyle(Theme.ink)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.7)
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 8)
-                                .background(Theme.sea.opacity(0.12), in: Capsule())
+                if let entry {
+                    TextbookCharacter(entry: entry, glyphSize: 168, pinyinSize: 76)
+                    if !entry.words.isEmpty {
+                        HStack(spacing: 10) {
+                            ForEach(entry.words, id: \.self) { word in
+                                Text(word)
+                                    .font(Theme.ui(22, .bold))
+                                    .foregroundStyle(Theme.ink)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 8)
+                                    .background(Theme.sea.opacity(0.12), in: Capsule())
+                            }
                         }
+                        Button("听词语") { speech.replayWords(entry) }
+                            .font(Theme.ui(16, .bold))
+                            .foregroundStyle(Theme.seaDeep)
                     }
-                    Button("听词语") { speech.speak(entry.words.joined(separator: "，")) }
-                        .font(Theme.ui(16, .bold))
-                        .foregroundStyle(Theme.seaDeep)
+                    if !entry.sentence.isEmpty {
+                        Text(entry.sentence)
+                            .font(Theme.ui(22, .semibold))
+                            .foregroundStyle(Theme.ink)
+                            .multilineTextAlignment(.center)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.7)
+                        Button("听句子") { speech.replaySentence(entry) }
+                            .font(Theme.ui(16, .bold))
+                            .foregroundStyle(Theme.seaDeep)
+                    }
+                    Button {
+                        speech.replayCharacter(entry)
+                    } label: {
+                        Label("听一听", systemImage: "speaker.wave.2.fill")
+                            .font(Theme.ui(22, .bold))
+                            .foregroundStyle(Theme.card)
+                            .padding(.horizontal, 26)
+                            .frame(minHeight: 64)
+                            .background(Theme.sea, in: Capsule())
+                    }
+                    .buttonStyle(.plain)
                 }
-                if !entry.sentence.isEmpty {
-                    Text(entry.sentence)
-                        .font(Theme.ui(22, .semibold))
-                        .foregroundStyle(Theme.ink)
-                        .multilineTextAlignment(.center)
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.7)
-                    Button("听句子") { speech.speak(entry.sentence) }
-                        .font(Theme.ui(16, .bold))
-                        .foregroundStyle(Theme.seaDeep)
-                }
-                Button {
-                    speech.speakCharacter(entry.char)
-                } label: {
-                    Label("听一听", systemImage: "speaker.wave.2.fill")
-                        .font(Theme.ui(22, .bold))
-                        .foregroundStyle(Theme.card)
-                        .padding(.horizontal, 26)
-                        .frame(minHeight: 64)
-                        .background(Theme.sea, in: Capsule())
-                }
-                .buttonStyle(.plain)
-            }
-            Text("\(introIndex + 1) / \(max(lesson.characters.count, 1))")
-                .font(Theme.ui(16, .semibold))
-                .foregroundStyle(Theme.inkSoft)
-            PrimaryButton(title: introIndex + 1 >= lesson.characters.count ? "开始练习" : "下一个") {
-                if introIndex + 1 >= lesson.characters.count {
-                    phase = .practice
-                } else {
-                    introIndex += 1
-                    if let next = lesson.characters[safe: introIndex] {
-                        speech.speakCharacter(next.char)
+                Text("\(introIndex + 1) / \(max(lesson.characters.count, 1))")
+                    .font(Theme.ui(16, .semibold))
+                    .foregroundStyle(Theme.inkSoft)
+                PrimaryButton(title: introIndex + 1 >= lesson.characters.count ? "开始练习" : "下一个") {
+                    if introIndex + 1 >= lesson.characters.count {
+                        phase = .practice
+                    } else {
+                        introIndex += 1
                     }
                 }
             }
-        }
             .padding(24)
             .frame(maxWidth: 760)
             .frame(maxWidth: .infinity)
@@ -188,10 +185,10 @@ struct LessonPlayerView: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 12)
         }
-        .onAppear {
-            if introIndex == 0, let first = lesson.characters.first {
-                speech.speakCharacter(first.char)
-            }
+        .task(id: introIndex) {
+            guard let entry else { return }
+            let token = speech.playPresentation(entry, repeats: 3, includePhrases: true)
+            await PlaybackLifetime.untilCancelled(stop: token, speech: speech)
         }
     }
 
@@ -232,17 +229,50 @@ struct LessonPlayerView: View {
             Text(earnedStars == 3 ? "记得很牢" : "再认一次会更熟")
                 .font(Theme.ui(18, .medium))
                 .foregroundStyle(Theme.inkSoft)
-            if let next = nextLessonID(after: lesson) {
+            if case .open(let next) = nextStep(after: lesson) {
                 PrimaryButton(title: "下一课") {
                     if !path.isEmpty {
                         path[path.count - 1] = .lesson(next)
                     }
                 }
+            } else if case .rest = nextStep(after: lesson) {
+                Text("今天的新课学完啦，明天再来")
+                    .font(Theme.ui(18, .semibold))
+                    .foregroundStyle(Theme.seaDeep)
+                    .multilineTextAlignment(.center)
             }
             PrimaryButton(title: "回到小路", fill: Theme.coral) {
                 dismiss()
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private func resting(_ lesson: LessonCurriculum) -> some View {
+        let count = progress.newCharactersToday()
+        let limit = settings.dailyNewCharacters
+        let left = progress.remainingNewCharactersToday(limit: limit)
+        let fresh = progress.freshCharacters(in: lesson, corpus: corpus).count
+        let title = left <= 0 ? "今天的新字学完啦" : "今天先到这里"
+        let detail = left <= 0
+            ? "你今天认识了 \(count) 个新字。明天再来新课，今日复习还可以接着做。"
+            : "这一课有 \(fresh) 个新字，今天还剩 \(left) 个名额。明天再开始，复习还可以接着做。"
+        return VStack(spacing: 16) {
+            Image(systemName: "moon.stars.fill")
+                .font(.system(size: 56, weight: .bold))
+                .foregroundStyle(Theme.sea)
+            Text(title)
+                .font(Theme.ui(36, .bold))
+                .foregroundStyle(Theme.ink)
+                .multilineTextAlignment(.center)
+            Text(detail)
+                .font(Theme.ui(20, .medium))
+                .foregroundStyle(Theme.inkSoft)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: 520)
+            PrimaryButton(title: "回到小路") { dismiss() }
+        }
+        .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
@@ -274,7 +304,7 @@ struct LessonPlayerView: View {
             return CGFloat(questionIndex) / CGFloat(count)
         case .done:
             return 1
-        case .unavailable:
+        case .resting, .unavailable:
             return 0
         }
     }
@@ -293,6 +323,17 @@ struct LessonPlayerView: View {
     private func prepare() {
         guard !prepared, let lesson else { return }
         prepared = true
+        switch progress.access(to: lesson, in: corpus, dailyLimit: settings.dailyNewCharacters) {
+        case .restToday:
+            phase = .resting
+            return
+        case .needsPrevious:
+            phase = .unavailable
+            return
+        case .ready:
+            break
+        }
+        progress.recordNewCharactersIfNeeded(lesson, in: corpus)
         progress.beginSession()
         questions = QuestionFactory.makeSession(lesson: lesson, corpus: corpus, progress: progress)
         if questions.isEmpty {
@@ -307,7 +348,10 @@ struct LessonPlayerView: View {
     }
 
     private func handleAnswer(_ correct: Bool) {
-        if correct { correctCount += 1 }
+        if correct {
+            correctCount += 1
+            speech.speakPraise()
+        }
         guard questions.indices.contains(questionIndex) else { return }
         let entries = questions[questionIndex].gradedEntries
         for entry in entries {
@@ -337,18 +381,31 @@ struct LessonPlayerView: View {
         phase = .done
     }
 
-    private func nextLessonID(after lesson: LessonCurriculum) -> String? {
+    private enum NextStep {
+        case open(String)
+        case rest
+        case none
+    }
+
+    private func nextStep(after lesson: LessonCurriculum) -> NextStep {
         guard let island = corpus.island(stage: lesson.stage, index: lesson.islandIndex),
               let index = island.lessons.firstIndex(where: { $0.id == lesson.id }),
               index + 1 < island.lessons.count else {
-            return nil
+            return .none
         }
         let next = island.lessons[index + 1]
-        return progress.isLessonUnlocked(next, in: corpus) ? next.id : nil
+        switch progress.access(to: next, in: corpus, dailyLimit: settings.dailyNewCharacters) {
+        case .ready:
+            return .open(next.id)
+        case .restToday:
+            return .rest
+        case .needsPrevious:
+            return .none
+        }
     }
 
     private func requestClose() {
-        if phase == .done || phase == .unavailable {
+        if phase == .done || phase == .unavailable || phase == .resting {
             dismiss()
         } else {
             showLeave = true

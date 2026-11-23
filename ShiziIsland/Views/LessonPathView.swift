@@ -5,6 +5,7 @@ struct LessonPathView: View {
     @Binding var path: [AppRoute]
     @EnvironmentObject private var corpus: CorpusStore
     @EnvironmentObject private var progress: ProgressStore
+    @EnvironmentObject private var settings: AppSettings
     @Environment(\.dismiss) private var dismiss
     @State private var hint: String?
 
@@ -18,8 +19,13 @@ struct LessonPathView: View {
                 VStack(spacing: 0) {
                     topBar(island)
                     ScrollView {
-                        lessonList(island)
-                            .padding(.bottom, 28)
+                        VStack(spacing: 14) {
+                            if showsRestBanner(island) {
+                                restBanner
+                            }
+                            lessonList(island)
+                        }
+                        .padding(.bottom, 28)
                     }
                 }
             } else {
@@ -77,8 +83,38 @@ struct LessonPathView: View {
         .padding(.top, 8)
     }
 
+    private func showsRestBanner(_ island: IslandCurriculum) -> Bool {
+        island.lessons.contains { lesson in
+            progress.access(to: lesson, in: corpus, dailyLimit: settings.dailyNewCharacters) == .restToday
+        }
+    }
+
+    private var restBanner: some View {
+        let left = progress.remainingNewCharactersToday(limit: settings.dailyNewCharacters)
+        return HStack(spacing: 12) {
+            Image(systemName: "moon.stars.fill")
+                .font(.system(size: 26, weight: .bold))
+                .foregroundStyle(Theme.sea)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(left <= 0 ? "今天的新字学完啦" : "今天先到这里")
+                    .font(Theme.ui(20, .bold))
+                    .foregroundStyle(Theme.ink)
+                Text("明天再来新课。今日复习还可以接着做。")
+                    .font(Theme.ui(15, .medium))
+                    .foregroundStyle(Theme.inkSoft)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(16)
+        .background(Theme.card.opacity(0.95), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+        .padding(.horizontal, 22)
+        .padding(.top, 8)
+    }
+
     private func lessonCard(_ lesson: LessonCurriculum) -> some View {
-        let unlocked = progress.isLessonUnlocked(lesson, in: corpus)
+        let access = progress.access(to: lesson, in: corpus, dailyLimit: settings.dailyNewCharacters)
+        let unlocked = access == .ready
+        let resting = access == .restToday
         let completed = progress.isCompleted(lesson.id)
         let tint = lesson.isCheckpoint ? Theme.coral : Theme.stageColor(lesson.stage)
         let title = lesson.isCheckpoint ? "小岛测验" : "第 \(lesson.number) 课"
@@ -86,21 +122,26 @@ struct LessonPathView: View {
             ? "把这一岛认过一遍"
             : lesson.characters.map(\.char).joined(separator: " ")
         return Button {
-            if unlocked {
+            switch access {
+            case .ready:
                 path.append(.lesson(lesson.id))
-            } else if lesson.isCheckpoint {
-                hint = "先把这一岛的课学完"
-            } else {
-                hint = "先完成上一课"
+            case .restToday:
+                let left = progress.remainingNewCharactersToday(limit: settings.dailyNewCharacters)
+                hint = left <= 0 ? "今天的新字学完啦，明天再来" : "今天先到这里，明天再来新课"
+            case .needsPrevious:
+                hint = lesson.isCheckpoint ? "先把这一岛的课学完" : "先完成上一课"
             }
         } label: {
             VStack(alignment: .leading, spacing: 12) {
                 HStack {
                     Text(title)
                         .font(Theme.ui(22, .bold))
-                        .foregroundStyle(unlocked ? Theme.ink : Theme.locked)
+                        .foregroundStyle(unlocked || resting ? Theme.ink : Theme.locked)
                     Spacer()
-                    if !unlocked {
+                    if resting {
+                        Image(systemName: "moon.stars.fill")
+                            .foregroundStyle(Theme.sea)
+                    } else if !unlocked {
                         Image(systemName: "lock.fill")
                             .foregroundStyle(Theme.locked)
                     } else if completed {
@@ -110,12 +151,16 @@ struct LessonPathView: View {
                 }
                 Text(sample)
                     .font(lesson.isCheckpoint ? Theme.ui(16, .medium) : Theme.glyph(28))
-                    .foregroundStyle(unlocked ? Theme.ink : Theme.locked)
+                    .foregroundStyle(unlocked || resting ? Theme.ink : Theme.locked)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(minHeight: 40)
                 if unlocked {
                     StarRow(filled: progress.stars(for: lesson.id))
+                } else if resting {
+                    Text("明天再来")
+                        .font(Theme.ui(14, .semibold))
+                        .foregroundStyle(Theme.seaDeep)
                 } else {
                     Text("还没打开")
                         .font(Theme.ui(14, .semibold))
@@ -128,7 +173,7 @@ struct LessonPathView: View {
                 ZStack(alignment: .bottom) {
                     ArtworkFill(
                         name: StageArt.imageName(lesson.stage),
-                        saturation: unlocked ? 1 : 0.3
+                        saturation: unlocked ? 1 : (resting ? 0.7 : 0.3)
                     )
                     LinearGradient(
                         colors: [Theme.card.opacity(0.15), Theme.card.opacity(0.94)],
@@ -141,7 +186,7 @@ struct LessonPathView: View {
             .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
             .overlay(
                 RoundedRectangle(cornerRadius: 24, style: .continuous)
-                    .stroke(unlocked ? tint.opacity(0.8) : Theme.locked.opacity(0.5), lineWidth: 3)
+                    .stroke(unlocked ? tint.opacity(0.8) : (resting ? Theme.sea.opacity(0.7) : Theme.locked.opacity(0.5)), lineWidth: 3)
             )
         }
         .buttonStyle(.plain)
