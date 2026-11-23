@@ -3,6 +3,7 @@ import SwiftUI
 struct HomeView: View {
     @EnvironmentObject private var corpus: CorpusStore
     @EnvironmentObject private var progress: ProgressStore
+    @EnvironmentObject private var settings: AppSettings
     @Binding var path: [AppRoute]
     @State private var hint: String?
 
@@ -49,6 +50,7 @@ struct HomeView: View {
                         .frame(maxWidth: .infinity)
                 }
                 header
+                dailyCard
                 statCard
                 if due == 0 {
                     reviewCard(due: due)
@@ -65,6 +67,7 @@ struct HomeView: View {
         let cardWidth = max(width - 32, 1)
         return VStack(alignment: .leading, spacing: 14) {
             header
+            dailyCard
             statRow
             reviewCard(due: due)
                 .frame(height: cardWidth * (due > 0 ? 0.72 : 0.58))
@@ -77,21 +80,64 @@ struct HomeView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text("识字小岛")
-                .font(Theme.ui(40, .bold))
-                .foregroundStyle(Theme.ink)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-            Text("看见字，听见字，认出字")
-                .font(Theme.ui(18, .semibold))
-                .foregroundStyle(Theme.inkSoft)
-                .lineLimit(1)
-                .minimumScaleFactor(0.8)
+        HStack(alignment: .center, spacing: 12) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("识字小岛")
+                    .font(Theme.ui(40, .bold))
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                Text("看见字，听见字，认出字")
+                    .font(Theme.ui(18, .semibold))
+                    .foregroundStyle(Theme.inkSoft)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
+            Spacer(minLength: 8)
+            Button {
+                path.append(.settings)
+            } label: {
+                Label("设置", systemImage: "gearshape.fill")
+                    .font(Theme.ui(16, .bold))
+                    .foregroundStyle(Theme.ink)
+                    .padding(.horizontal, 12)
+                    .frame(minHeight: 44)
+                    .background(Theme.paper, in: Capsule())
+            }
+            .buttonStyle(.plain)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(Theme.card.opacity(0.92), in: RoundedRectangle(cornerRadius: 22, style: .continuous))
+    }
+
+    private var dailyCard: some View {
+        let count = progress.newCharactersToday()
+        let limit = settings.dailyNewCharacters
+        let finished = count >= limit
+        return HStack(spacing: 10) {
+            Image(systemName: finished ? "moon.stars.fill" : "sun.max.fill")
+                .font(.system(size: 20, weight: .bold))
+                .foregroundStyle(finished ? Theme.sea : Theme.coral)
+                .frame(width: 40, height: 40)
+                .background((finished ? Theme.sea : Theme.coral).opacity(0.15), in: Circle())
+            VStack(alignment: .leading, spacing: 2) {
+                Text(finished ? "今天的新字学完啦" : "今天新字 \(count)/\(limit)")
+                    .font(Theme.ui(17, .bold))
+                    .foregroundStyle(Theme.ink)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                Text(finished ? "复习还可以接着做" : "每天学 \(limit) 个新字")
+                    .font(Theme.ui(13, .medium))
+                    .foregroundStyle(Theme.inkSoft)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Theme.card.opacity(0.92), in: RoundedRectangle(cornerRadius: 18, style: .continuous))
     }
 
     private var statRow: some View {

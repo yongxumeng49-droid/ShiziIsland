@@ -5,6 +5,7 @@ enum AppRoute: Hashable {
     case island(String)
     case lesson(String)
     case review
+    case settings
 }
 
 struct RootView: View {
@@ -31,6 +32,8 @@ struct RootView: View {
                         .id(id)
                 case .review:
                     ReviewSessionView()
+                case .settings:
+                    SettingsView()
                 }
             }
         }

@@ -12,9 +12,11 @@ struct HanziEntry: Codable, Identifiable, Hashable {
     let words: [String]
     /// 可选。一句短句。
     let sentence: String
+    /// 可选。插图资源名。没有就按编号或分类图来。
+    let illustration: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, char, pinyin, strokes, stage, hidden, words, sentence
+        case id, char, pinyin, strokes, stage, hidden, words, sentence, illustration
     }
 
     init(from decoder: Decoder) throws {
@@ -27,5 +29,19 @@ struct HanziEntry: Codable, Identifiable, Hashable {
         hidden = try container.decode(Bool.self, forKey: .hidden)
         words = try container.decodeIfPresent([String].self, forKey: .words) ?? []
         sentence = try container.decodeIfPresent(String.self, forKey: .sentence) ?? ""
+        illustration = try container.decodeIfPresent(String.self, forKey: .illustration)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(char, forKey: .char)
+        try container.encode(pinyin, forKey: .pinyin)
+        try container.encode(strokes, forKey: .strokes)
+        try container.encode(stage, forKey: .stage)
+        try container.encode(hidden, forKey: .hidden)
+        try container.encode(words, forKey: .words)
+        try container.encode(sentence, forKey: .sentence)
+        try container.encodeIfPresent(illustration, forKey: .illustration)
     }
 }

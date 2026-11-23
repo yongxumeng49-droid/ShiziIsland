@@ -85,13 +85,13 @@ struct ChoiceQuestion: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .task(id: question.id) {
-            if question.kind == .listenPickChar, let prompt {
-                speech.speakCharacter(prompt.char)
-            }
+            guard question.kind == .listenPickChar, let prompt else { return }
+            let token = speech.playPresentation(prompt, repeats: 3, includePhrases: false)
+            await PlaybackLifetime.untilCancelled(stop: token, speech: speech)
         }
         .task(id: tick) {
             guard autoAdvance, tick > 0 else { return }
-            try? await Task.sleep(nanoseconds: 850_000_000)
+            try? await Task.sleep(nanoseconds: 1_100_000_000)
             guard !Task.isCancelled else { return }
             advance()
         }
@@ -105,7 +105,7 @@ struct ChoiceQuestion: View {
                 .foregroundStyle(Theme.inkSoft)
             if question.kind == .listenPickChar {
                 Button {
-                    if let prompt { speech.speakCharacter(prompt.char) }
+                    if let prompt { speech.replayCharacter(prompt) }
                 } label: {
                     Image(systemName: "speaker.wave.2.fill")
                         .font(.system(size: 54, weight: .bold))
@@ -256,7 +256,7 @@ struct MatchBoard: View {
         }
         .task(id: finished && mistakes == 0) {
             guard finished, mistakes == 0 else { return }
-            try? await Task.sleep(nanoseconds: 700_000_000)
+            try? await Task.sleep(nanoseconds: 1_100_000_000)
             guard !Task.isCancelled else { return }
             advance()
         }

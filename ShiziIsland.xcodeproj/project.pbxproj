@@ -23,6 +23,11 @@
 		92D072ACB43DDBC8036DFB15 /* ReviewSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEF9BC55B41613F7AE0AE61F /* ReviewSessionView.swift */; };
 		162D836C7C50E6AD190F4643 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31C9EF36D5E561B4500076AF /* RootView.swift */; };
 		B20563F92186107432B091DE /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFADAB6D5BE52C392372D721 /* Theme.swift */; };
+		A55E77000000000000000002 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = A55E77000000000000000001 /* AppSettings.swift */; };
+		C4AC7E000000000000000002 /* CharacterCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4AC7E000000000000000001 /* CharacterCard.swift */; };
+		111057000000000000000002 /* IllustrationCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 111057000000000000000001 /* IllustrationCatalog.swift */; };
+		5E7700000000000000000002 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E7700000000000000000001 /* SettingsView.swift */; };
+		V01CE5000000000000000002 /* Voices in Resources */ = {isa = PBXBuildFile; fileRef = V01CE5000000000000000001 /* Voices */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +49,11 @@
 		AEF9BC55B41613F7AE0AE61F /* ReviewSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSessionView.swift; sourceTree = "<group>"; };
 		31C9EF36D5E561B4500076AF /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		DFADAB6D5BE52C392372D721 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A55E77000000000000000001 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
+		C4AC7E000000000000000001 /* CharacterCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharacterCard.swift; sourceTree = "<group>"; };
+		111057000000000000000001 /* IllustrationCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllustrationCatalog.swift; sourceTree = "<group>"; };
+		5E7700000000000000000001 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		V01CE5000000000000000001 /* Voices */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Voices; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				1321991C1FC16445E077634A /* ProgressStore.swift */,
+				A55E77000000000000000001 /* AppSettings.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -148,6 +159,9 @@
 				7080DC544708E5E56BB17EC0 /* QuestionViews.swift */,
 				AEF9BC55B41613F7AE0AE61F /* ReviewSessionView.swift */,
 				31C9EF36D5E561B4500076AF /* RootView.swift */,
+				5E7700000000000000000001 /* SettingsView.swift */,
+				C4AC7E000000000000000001 /* CharacterCard.swift */,
+				111057000000000000000001 /* IllustrationCatalog.swift */,
 				DFADAB6D5BE52C392372D721 /* Theme.swift */,
 			);
 			path = Views;
@@ -157,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				901EE3022A0C446780F46A2C /* characters.json */,
+				V01CE5000000000000000001 /* Voices */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -220,6 +235,7 @@
 			files = (
 				A6070B9CF28E71610AA267AE /* Assets.xcassets in Resources */,
 				6CC958A0BEA4AD614AE5FE7D /* characters.json in Resources */,
+				V01CE5000000000000000002 /* Voices in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -244,6 +260,10 @@
 				92D072ACB43DDBC8036DFB15 /* ReviewSessionView.swift in Sources */,
 				162D836C7C50E6AD190F4643 /* RootView.swift in Sources */,
 				B20563F92186107432B091DE /* Theme.swift in Sources */,
+				A55E77000000000000000002 /* AppSettings.swift in Sources */,
+				C4AC7E000000000000000002 /* CharacterCard.swift in Sources */,
+				111057000000000000000002 /* IllustrationCatalog.swift in Sources */,
+				5E7700000000000000000002 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
